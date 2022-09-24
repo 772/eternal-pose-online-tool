@@ -83,11 +83,15 @@
   </g>
 </svg>
 <a href="#" onclick="button()"><h1>Click here to generate a new eternal pose</h1></a>
-<p>[!TODO] goal x <span id="x"></span></p>
-<p>[!TODO] goal y <span id="y"></span></p>
+<p><span id="degree"></span> °</p>
 <small><a href="https://github.com/772/eternal-pose-online-tool">Source code</a> | Inspired by Eichiro Oda's One Piece and <a href="https://github.com/westnordost/Luftlinie">Luftlinie</a></small>
 </center>
 <script>
+var x_self = 0.0;
+var y_self = 0.0;
+var x_goal = 0.0;
+var y_goal = 0.0;
+
 const options = {
   enableHighAccuracy: true,
   timeout: 5000,
@@ -96,26 +100,35 @@ const options = {
 
 function success(pos) {
   const crd = pos.coords;
-  window.location.href = "?x=" + crd.longitude + "&y=" + crd.latitude;
-  
-  console.log(`More or less ${crd.accuracy} meters.`);
+  x_self = crd.longitude;
+  y_self = crd.latitude;
+  if (urlParams.has('x') && urlParams.has('y')) {
+    var angle = Math.atan((y_goal-y_self)/(x_goal-x_self));
+    angle_degree = 90 - angle * (180 / Math.PI);
+	document.getElementById("degree").innerHTML = angle_degree;
+  }
+  //console.log(`More or less ${crd.accuracy} meters.`);
 }
 
 function error(err) {
   console.warn(`ERROR(${err.code}): ${err.message}`);
 }
 
-function button() {
+function getPosition() {
   navigator.geolocation.getCurrentPosition(success, error, options);
+}
+
+function button() {
+  getPosition();
+  window.location.href = "?x=" + x_self + "&y=" + y_self;
 }
 
 const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
 if (urlParams.has('x') && urlParams.has('y')) {
-	const x = urlParams.get('x');
-	const y = urlParams.get('y');
-	document.getElementById("x").innerHTML = x;
-	document.getElementById("y").innerHTML = y;
+	x_goal = urlParams.get('x');
+	y_goal = urlParams.get('y');
+	getPosition();
 }
 </script>
 </body>

@@ -125,7 +125,8 @@ function getPosition() {
 }
 
 function button() {
-  getPosition();
+  y_self = document.getElementById("y_input").value;
+  x_self = document.getElementById("x_input").value;
   window.location.href = "?x=" + x_self + "&y=" + y_self;
 }
 

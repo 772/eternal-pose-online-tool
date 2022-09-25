@@ -10,8 +10,9 @@
 <body>
 <center>
 <svg style="height:500px;width:500px;"
+   transform="rotate(0)"
    id="svg2233"
-   viewBox="0 0 1000 1000"
+   viewBox="0 0 1050 1050"
   <defs
      id="defs2235">
     <linearGradient
@@ -86,8 +87,7 @@
   <polygon points="500 200  522 330  478 330" fill="#f00" />
   <circle cx="500" cy="500" r="40" fill="#f8f8f8" />
 </svg>
-<a href="#" onclick="button()"><h1>Click here to generate a new eternal pose</h1></a>
-<p><span id="degree"></span> °</p>
+<p>Latitude (y) <input id="y_input" type="number" value="0.0"></p><p>Longitude (x) <input id="x_input" type="number" value="0.0"></p><p><input type="button" onclick="button()" value="Generate a new eternal pose"></p>
 <small><a href="https://github.com/772/eternal-pose-online-tool">Source code</a> | Inspired by Eichiro Oda's One Piece and <a href="https://github.com/westnordost/Luftlinie">Luftlinie</a></small>
 </center>
 <script>
@@ -106,10 +106,12 @@ function success(pos) {
   const crd = pos.coords;
   x_self = crd.longitude;
   y_self = crd.latitude;
+  document.getElementById("y_input").value = y_self;
+  document.getElementById("x_input").value = x_self;
   if (urlParams.has('x') && urlParams.has('y')) {
     var angle = Math.atan((y_goal-y_self)/(x_goal-x_self));
-    angle_degree = 90 - angle * (180 / Math.PI);
-	document.getElementById("degree").innerHTML = angle_degree;
+    angle_degree = 90 - angle * (180 / Math.PI)
+    document.getElementById("svg2233").setAttribute("transform", "rotate(" + angle_degree + ")");
   }
   //console.log(`More or less ${crd.accuracy} meters.`);
 }
